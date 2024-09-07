@@ -1,35 +1,111 @@
 # .logtag
 
-This repository manages tags and configurations for the LogTag tool. Different branches are prepared for each language, and each branch contains tag files and configuration files suited for that language.
+このリポジトリは、LogTag ツール用のタグや設定を管理するリポジトリです。各言語ごとにブランチが用意されており、それぞれの環境に適したタグファイルや設定ファイルを含んでいます。
 
-## LogTag Repository
+## LogTag リポジトリ
 
 https://github.com/ShotaIuchi/LogTag.git
 
-## Branch Structure
+## ブランチ構成
 
-Each language has its own branch, and the branch contains tag files and configuration files for that language.
+言語ごとに異なるブランチが用意されており、それぞれのブランチには該当言語に対応するタグファイルや設定ファイルが含まれています。
 
-- `main`: The default branch with basic settings.
-- `en`: English-specific settings and tag files.
-- `ja`: Japanese-specific settings and tag files.
+- `main`: デフォルト設定を含む基本的なブランチ
+- `en`: 英語用の設定とタグファイル
+- `ja`: 日本語用の設定とタグファイル
 
-Each branch stores the necessary tags and configuration to perform log analysis in the respective language.
+各ブランチには、対応する言語でのログ解析を行うためのタグと設定が保存されています。
 
-## Example Usage
+## フォルダ構成
 
-To apply the English tags using the `en` branch, follow these steps:
-
-1. Clone the `en` branch of the `.logtag` repository to your home directory:
-
-```sh
-git clone -b en https://github.com/ShotaIuchi/.logtag.git ~/.logtag
+```
+/
+├── config.hjson      # 設定ファイル
+└── logtag/           # タグファイルを格納するフォルダ
+    ├── 01-general.hjson  # (例) タグファイル（カテゴリ: general）
+    ├── 02-errors.hjson   # (例) タグファイル（カテゴリ: errors）
+    └── 03-warnings.hjson # (例) タグファイル（カテゴリ: warnings）
 ```
 
-2. Run the LogTag tool:
+- `config.hjson`: タグの表示設定やフィルタを管理する設定ファイルです。
+- `logtag/`: タグファイルを格納するフォルダで、カテゴリごとにファイルが分かれています。
+  - `01-general.hjson`: (例) 一般的なログメッセージに対応するタグファイル。カテゴリは「general」。
+  - `02-errors.hjson`: (例) エラーメッセージに対応するタグファイル。カテゴリは「errors」。
+  - `03-warnings.hjson`: (例) 警告メッセージに対応するタグファイル。カテゴリは「warnings」。
+
+## `config.hjson` の内容説明
+
+`config.hjson` は、LogTag が出力するログメッセージの形式や表示する列、カテゴリのフィルタを定義しています。以下は、`config.hjson`のサンプルです。
+
+```hjson
+{
+  "column": [
+    {"name": "TAG", "display": "Tag", "enable": true},
+    {"name": "CATEGORY", "display": "Category", "enable": true},
+    {"name": "FILE", "display": "File", "enable": true},
+    {"name": "LOG", "display": "Log Message", "enable": true}
+  ],
+  "category": ["general", "errors", "warnings"]
+}
+```
+
+### 設定項目:
+
+- `column`: 出力に表示する列を定義します。各列に対して、表示名(`display`)と有効・無効(`enable`)を指定します。
+- `category`: 使用するタグのカテゴリを定義します。指定されたカテゴリのみが使用されます。
+
+### `category`が未設定の場合
+
+`config.hjson` で `category` が未設定の場合、全てのカテゴリのタグが適用されます。すべてのタグファイルが検索され、対応するタグがログメッセージに追加されます。
+
+## タグファイルのファイル名の説明と内容
+
+### ファイル名の規則
+
+タグファイルは、次の形式で命名されます。
+
+```
+[番号]-[カテゴリ].hjson
+```
+
+例:
+
+- `01-general.hjson`: (例) 一般的なログメッセージに対応するタグ
+- `02-errors.hjson`: (例) エラーメッセージに対応するタグ
+- `03-warnings.hjson`: (例) 警告メッセージに対応するタグ
+
+番号はカテゴリの優先順位を表し、数字が小さいほど優先されます。
+
+### タグファイルの内容説明
+
+タグファイルでは、ログメッセージ内で検出するキーワードと、それに対応するメッセージを定義します。正規表現もサポートしています。
+
+```hjson
+{
+  "ERROR": "エラーが発生しました",
+  "INFO": "情報",
+  "^WARN.*": "警告: "
+}
+```
+
+- `ERROR`: ログメッセージに「ERROR」が含まれている場合に「エラーが発生しました」というタグが追加されます。
+- `INFO`: ログメッセージに「INFO」が含まれている場合に「情報」というタグが追加されます。
+- `^WARN.*`: 「WARN」で始まるログメッセージに「警告: 」というタグが追加されます。
+
+## 使用例
+
+ブランチ `ja` を使用して日本語のタグを適用する場合、以下の手順で行います。
+
+1. `.logtag`リポジトリの`ja`ブランチをホームディレクトリにクローンします。
+
+```sh
+git clone -b ja https://github.com/ShotaIuchi/.logtag.git ~/.logtag
+```
+
+2. LogTag ツールを実行します。
 
 ```sh
 logtag *.txt
 ```
 
-For other languages, use the corresponding branch for that language.
+他の言語を使用する場合は、その言語に対応するブランチを利用してください。
