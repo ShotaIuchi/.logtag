@@ -1,0 +1,8 @@
+{
+    // https://android.googlesource.com/kernel/superproject/
+    //  - common/kernel/power/suspend.c
+    "PM: suspend entry (s2idle)" : "軽いサスペンド",
+    "PM: suspend entry (shallow)" : "中程度のサスペンド",
+    "PM: suspend entry (deep)" : "深いサスペンド",
+    "PM: suspend exit" : "サスペンドからのレジューム"
+}
