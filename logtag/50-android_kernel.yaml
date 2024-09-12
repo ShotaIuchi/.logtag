@@ -1,0 +1,10 @@
+# https://android.googlesource.com/kernel/superproject/
+#   - common/kernel/power/suspend.c
+- keyword: "PM: suspend entry (s2idle)"
+  message: "suspend to idle"
+- keyword: "PM: suspend entry (shallow)"
+  message: "standby"
+- keyword: "PM: suspend entry (deep)"
+  message: "deep sleep"
+- keyword: "PM: suspend exit"
+  message: "suspend exit"

@@ -1,8 +1,0 @@
-{
-    // https://android.googlesource.com/kernel/superproject/
-    //  - common/kernel/power/suspend.c
-    "PM: suspend entry (s2idle)" : "suspend to idle",
-    "PM: suspend entry (shallow)" : "standby",
-    "PM: suspend entry (deep)" : "deep sleep",
-    "PM: suspend exit" : "suspend exit"
-}
