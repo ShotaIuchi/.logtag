@@ -1,0 +1,10 @@
+# https://android.googlesource.com/kernel/superproject/
+#   - common/kernel/power/suspend.c
+- keyword: "PM: suspend entry (s2idle)"
+  message: "軽いサスペンド"
+- keyword: "PM: suspend entry (shallow)"
+  message: "中程度のサスペンド"
+- keyword: "PM: suspend entry (deep)"
+  message: "深いサスペンド"
+- keyword: "PM: suspend exit"
+  message: "サスペンドからのレジューム"
