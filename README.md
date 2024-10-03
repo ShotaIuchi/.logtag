@@ -20,43 +20,49 @@ Each branch stores the necessary tags and configuration to perform log analysis 
 
 ```
 /
-├── config.hjson      # Configuration file
+├── config.yaml      # Configuration file
 └── logtag/           # Folder containing tag files
-    ├── 01-general.hjson  # (Example) Tag file for category: general
-    ├── 02-errors.hjson   # (Example) Tag file for category: errors
-    └── 03-warnings.hjson # (Example) Tag file for category: warnings
+    ├── 01-general.yaml  # (Example) Tag file for category: general
+    ├── 02-errors.yaml   # (Example) Tag file for category: errors
+    └── 03-warnings.yaml # (Example) Tag file for category: warnings
 ```
 
-- `config.hjson`: This file manages the display and filter settings for tags.
+- `config.yaml`: This file manages the display and filter settings for tags.
 - `logtag/`: A folder containing the tag files, divided by category.
-  - `01-general.hjson`: (Example) Tag file for general log messages. Category: "general".
-  - `02-errors.hjson`: (Example) Tag file for error messages. Category: "errors".
-  - `03-warnings.hjson`: (Example) Tag file for warning messages. Category: "warnings".
+  - `01-general.yaml`: (Example) Tag file for general log messages. Category: "general".
+  - `02-errors.yaml`: (Example) Tag file for error messages. Category: "errors".
+  - `03-warnings.yaml`: (Example) Tag file for warning messages. Category: "warnings".
 
-## `config.hjson` Explanation
+## `config.yaml` Explanation
 
-`config.hjson` defines the format of log messages output by LogTag, the columns displayed, and category filters. Here is an example of `config.hjson`:
+`config.yaml` defines the format of log messages output by LogTag, the columns displayed, and category filters. Here is an example of `config.yaml`:
 
-```hjson
-{
-  "column": [
-    {"name": "TAG", "display": "Tag", "enable": true},
-    {"name": "CATEGORY", "display": "Category", "enable": true},
-    {"name": "FILE", "display": "File", "enable": true},
-    {"name": "LOG", "display": "Log Message", "enable": true}
-  ],
-  "category": ["general", "errors", "warnings"]
-}
+```yaml
+column:
+  - name: TAG
+    display: TAG
+    enable: true
+  - name: CATEGORY
+    display: CATEGORY
+    enable: true
+  - name: FILE
+    display: LOG-FILE
+    enable: true
+  - name: LOG
+    display: LOG
+    enable: true
+
+category:
+  - errors
 ```
 
 ### Configuration Items:
 
-- `column`: Defines the columns to be displayed in the output. For each column, specify the display name (`display`) and whether it is enabled (`enable`).
-- `category`: Defines which tag categories are applied. Only the specified categories will be used.
-
-### When `category` is not set
-
-If `category` is not specified in `config.hjson`, all tag categories will be applied. All tag files will be searched, and corresponding tags will be added to the log messages.
+- **`column`**: Defines the columns to be shown in the log output, including whether they are enabled and the display name for each column.
+  - `name`: The internal name of the column.
+  - `display`: The display name that will be shown in the log output.
+  - `enable`: Whether the column should be shown (`true` to show, `false` to hide).
+- **`category`**: Defines log tag categories for filtering purposes. You can add or remove categories depending on your needs. If all categories are valid, leave this section empty.
 
 ## Tag File Naming and Explanation
 
@@ -65,14 +71,14 @@ If `category` is not specified in `config.hjson`, all tag categories will be app
 Tag files follow this naming format:
 
 ```
-[number]-[category].hjson
+[number]-[category].yaml
 ```
 
 Example:
 
-- `01-general.hjson`: (Example) Tags for general log messages.
-- `02-errors.hjson`: (Example) Tags for error messages.
-- `03-warnings.hjson`: (Example) Tags for warning messages.
+- `01-general.yaml`: (Example) Tags for general log messages.
+- `02-errors.yaml`: (Example) Tags for error messages.
+- `03-warnings.yaml`: (Example) Tags for warning messages.
 
 The number represents the priority of the category, with lower numbers having higher priority.
 
@@ -80,17 +86,20 @@ The number represents the priority of the category, with lower numbers having hi
 
 Tag files define keywords to be detected in log messages and their corresponding tag messages. Regular expressions are supported.
 
-```hjson
-{
-  "ERROR": "An error has occurred",
-  "INFO": "Information",
-  "^WARN.*": "Warning: "
-}
+```yaml
+- keyword: "ERROR"
+  message: "An error has occurred"
+- keyword: "INFO"
+  message: "Information"
+- keyword: "^WARN.*"
+  message: "Warning"
+  regex: true
 ```
 
-- `ERROR`: If a log message contains "ERROR", the tag "An error has occurred" will be added.
-- `INFO`: If a log message contains "INFO", the tag "Information" will be added.
-- `^WARN.*`: Any log message starting with "WARN" will be tagged with "Warning: ".
+- **`<category>`**: The file name corresponds to the category name, and each file can define multiple keywords for that specific category.
+- **`keyword`**: The specific log keyword to be matched.
+- **`message`**: A description or explanation for the keyword.
+- **`regex`**: Specifies if the keyword should be interpreted as a regular expression (`true`). If omitted, the keyword will be treated as a literal string.
 
 ## Example Usage
 
