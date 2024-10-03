@@ -20,43 +20,49 @@ https://github.com/ShotaIuchi/LogTag.git
 
 ```
 /
-├── config.hjson      # 設定ファイル
+├── config.yaml      # 設定ファイル
 └── logtag/           # タグファイルを格納するフォルダ
-    ├── 01-general.hjson  # (例) タグファイル（カテゴリ: general）
-    ├── 02-errors.hjson   # (例) タグファイル（カテゴリ: errors）
-    └── 03-warnings.hjson # (例) タグファイル（カテゴリ: warnings）
+    ├── 01-general.yaml  # (例) タグファイル（カテゴリ: general）
+    ├── 02-errors.yaml   # (例) タグファイル（カテゴリ: errors）
+    └── 03-warnings.yaml # (例) タグファイル（カテゴリ: warnings）
 ```
 
-- `config.hjson`: タグの表示設定やフィルタを管理する設定ファイルです。
+- `config.yaml`: タグの表示設定やフィルタを管理する設定ファイルです。
 - `logtag/`: タグファイルを格納するフォルダで、カテゴリごとにファイルが分かれています。
-  - `01-general.hjson`: (例) 一般的なログメッセージに対応するタグファイル。カテゴリは「general」。
-  - `02-errors.hjson`: (例) エラーメッセージに対応するタグファイル。カテゴリは「errors」。
-  - `03-warnings.hjson`: (例) 警告メッセージに対応するタグファイル。カテゴリは「warnings」。
+  - `01-general.yaml`: (例) 一般的なログメッセージに対応するタグファイル。カテゴリは「general」。
+  - `02-errors.yaml`: (例) エラーメッセージに対応するタグファイル。カテゴリは「errors」。
+  - `03-warnings.yaml`: (例) 警告メッセージに対応するタグファイル。カテゴリは「warnings」。
 
-## `config.hjson` の内容説明
+## `config.yaml` の内容説明
 
-`config.hjson` は、LogTag が出力するログメッセージの形式や表示する列、カテゴリのフィルタを定義しています。以下は、`config.hjson`のサンプルです。
+`config.yaml` は、LogTag が出力するログメッセージの形式や表示する列、カテゴリのフィルタを定義しています。以下は、`config.yaml`のサンプルです。
 
-```hjson
-{
-  "column": [
-    {"name": "TAG", "display": "Tag", "enable": true},
-    {"name": "CATEGORY", "display": "Category", "enable": true},
-    {"name": "FILE", "display": "File", "enable": true},
-    {"name": "LOG", "display": "Log Message", "enable": true}
-  ],
-  "category": ["general", "errors", "warnings"]
-}
+```yaml
+column:
+  - name: TAG
+    display: TAG
+    enable: true
+  - name: CATEGORY
+    display: CATEGORY
+    enable: true
+  - name: FILE
+    display: LOG-FILE
+    enable: true
+  - name: LOG
+    display: LOG
+    enable: true
+
+category:
+  - "errors"
 ```
 
 ### 設定項目:
 
-- `column`: 出力に表示する列を定義します。各列に対して、表示名(`display`)と有効・無効(`enable`)を指定します。
-- `category`: 使用するタグのカテゴリを定義します。指定されたカテゴリのみが使用されます。
-
-### `category`が未設定の場合
-
-`config.hjson` で `category` が未設定の場合、全てのカテゴリのタグが適用されます。すべてのタグファイルが検索され、対応するタグがログメッセージに追加されます。
+- **`column`**: ログ出力に表示する列を定義します。表示の有無や表示名も設定できます。
+  - `name`: 列の内部名。
+  - `display`: ログ出力に表示される列の名前。
+  - `enable`: 列を表示するかどうか（`true`で表示、`false`で非表示）。
+- **`category`**: ログタグカテゴリをフィルタリングのために定義します。必要に応じてカテゴリを追加・削除できます。すべてのカテゴリを使用する場合は、このセクションを空のままにします。
 
 ## タグファイルのファイル名の説明と内容
 
@@ -65,14 +71,14 @@ https://github.com/ShotaIuchi/LogTag.git
 タグファイルは、次の形式で命名されます。
 
 ```
-[番号]-[カテゴリ].hjson
+[番号]-[カテゴリ].yaml
 ```
 
 例:
 
-- `01-general.hjson`: (例) 一般的なログメッセージに対応するタグ
-- `02-errors.hjson`: (例) エラーメッセージに対応するタグ
-- `03-warnings.hjson`: (例) 警告メッセージに対応するタグ
+- `01-general.yaml`: (例) 一般的なログメッセージに対応するタグ
+- `02-errors.yaml`: (例) エラーメッセージに対応するタグ
+- `03-warnings.yaml`: (例) 警告メッセージに対応するタグ
 
 番号はカテゴリの優先順位を表し、数字が小さいほど優先されます。
 
@@ -80,17 +86,20 @@ https://github.com/ShotaIuchi/LogTag.git
 
 タグファイルでは、ログメッセージ内で検出するキーワードと、それに対応するメッセージを定義します。正規表現もサポートしています。
 
-```hjson
-{
-  "ERROR": "エラーが発生しました",
-  "INFO": "情報",
-  "^WARN.*": "警告: "
-}
+```yaml
+- keyword: "ERROR"
+  message: "エラーが発生しました"
+- keyword: "INFO"
+  message: "情報"
+- keyword: "^WARN.*"
+  message: "警告"
+  regex: true
 ```
 
-- `ERROR`: ログメッセージに「ERROR」が含まれている場合に「エラーが発生しました」というタグが追加されます。
-- `INFO`: ログメッセージに「INFO」が含まれている場合に「情報」というタグが追加されます。
-- `^WARN.*`: 「WARN」で始まるログメッセージに「警告: 」というタグが追加されます。
+- **`<category>`**: ファイル名はカテゴリ名に対応しており、各ファイルにはそのカテゴリに属する複数のキーワードを定義できます。
+- **`keyword`**: マッチする特定のログキーワード。
+- **`message`**: キーワードの説明。
+- **`regex`**: キーワードを正規表現として解釈するかどうか（`true`で正規表現として解釈）。省略した場合は文字列として扱われます。
 
 ## 使用例
 
